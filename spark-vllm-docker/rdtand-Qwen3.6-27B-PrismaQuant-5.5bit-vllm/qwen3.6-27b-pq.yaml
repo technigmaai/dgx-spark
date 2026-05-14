@@ -1,0 +1,61 @@
+recipe_version: '1'
+name: Qwen3.6-27B-PQ
+description: vLLM serving rdtand/Qwen3.6-27B-PrismaQuant-5.5bit-vllm + DFlash drafter k=15
+model: rdtand/Qwen3.6-27B-PrismaQuant-5.5bit-vllm
+
+container: vllm-node-dflash
+
+solo_only: true
+
+build_args:
+  - --tf5
+
+defaults:
+  port: 8000
+  host: 0.0.0.0
+  tensor_parallel: 1
+  gpu_memory_utilization: 0.85
+  max_model_len: 262144
+  max_num_batched_tokens: 16384
+  max_num_seqs: 3
+  served-model-name: gx10 qwen3.6-27b
+  chat_template: chat_template.jinja
+
+mods:
+  - mods/flashqla
+  - mods/fix-qwen3.6-chat-template
+
+env:
+  VLLM_ALLOW_LONG_MAX_MODEL_LEN: 1
+  TORCH_MATMUL_PRECISION: high
+  NVIDIA_FORWARD_COMPAT: 1
+  NVIDIA_DISABLE_REQUIRE: 1
+  HF_HUB_OFFLINE: 1
+  TRANSFORMERS_OFFLINE: 1
+
+command: |
+  vllm serve rdtand/Qwen3.6-27B-PrismaQuant-5.5bit-vllm \
+    --served-model-name {served-model-name} \
+    --host {host} --port {port} \
+    -tp {tensor_parallel} \
+    --max-model-len {max_model_len} \
+    --max-num-batched-tokens {max_num_batched_tokens} \
+    --max-num-seqs {max_num_seqs} \
+    --gpu-memory-utilization {gpu_memory_utilization} \
+    --dtype bfloat16 \
+    --kv-cache-dtype auto \
+    --enable-auto-tool-choice \
+    --reasoning-parser qwen3 \
+    --tool-call-parser qwen3_xml \
+    --chat-template {chat_template} \
+    --enable-chunked-prefill \
+    --no-enable-prefix-caching \
+    --trust-remote-code \
+    --load-format fastsafetensors \
+    --default-chat-template-kwargs '{{"preserve_thinking": true}}' \
+    --override-generation-config '{{"temperature": 0.7, "top_p": 0.80, "top_k": 20, "min_p": 0.0}}' \
+    --speculative-config '{{"method": "dflash", "model": "z-lab/Qwen3.6-27B-DFlash", "num_speculative_tokens": 15}}' \
+    --attention-backend flash_attn \
+    --limit-mm-per-prompt '{{"image": 4, "video": 2}}' \
+    --mm-encoder-tp-mode data \
+    --mm-processor-cache-type shm
