@@ -18,7 +18,7 @@ defaults:
   max_model_len: 262144
   max_num_batched_tokens: 16384
   max_num_seqs: 3
-  served-model-name: gx10 qwen3.6-27b-vision
+  served-model-name: gx10 qwen3.6-27b
   chat_template: chat_template.jinja
 
 mods:
