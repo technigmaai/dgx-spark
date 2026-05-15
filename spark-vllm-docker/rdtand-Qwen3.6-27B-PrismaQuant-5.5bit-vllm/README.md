@@ -19,19 +19,26 @@ Build the vLLM image with PR `40898` and TF5 enabled:
 
 ## FlashQLA-Blackwell Mod
 
-Apply FlashQLA-Blackwell from [PR #3](https://github.com/Plaaasma/FlashQLA-Blackwell/pull/3), then copy the updated mod into `spark-vllm-docker`.
+Install FlashQLA-Blackwell from the upstream repository, then copy the mod into `spark-vllm-docker`.
 
 ### Steps
 
-1. Pull the PR branch in the FlashQLA-Blackwell checkout:
+1. Clone the FlashQLA-Blackwell repository if it is not already present:
+
+   ```bash
+   git clone https://github.com/Plaaasma/FlashQLA-Blackwell.git
+   ```
+
+2. Update an existing checkout:
 
    ```bash
    cd FlashQLA-Blackwell
+   git pull
    ```
 
-2. Let the mod apply the v2 patch automatically when the vLLM version matches the updated upstream signature.
+3. Let the mod apply the v2 patch automatically when the vLLM version matches the updated upstream signature.
 
-3. Copy the mod into `spark-vllm-docker`:
+4. Copy the mod into `spark-vllm-docker`:
 
    ```bash
    SPARK_DIR=~/Development/ai-tools/spark-vllm-docker
@@ -39,14 +46,14 @@ Apply FlashQLA-Blackwell from [PR #3](https://github.com/Plaaasma/FlashQLA-Black
    cp -r flash_qla setup.py LICENSE $SPARK_DIR/mods/flashqla/
    ```
 
-4. Ensure the recipe includes the FlashQLA mod:
+5. Ensure the recipe includes the FlashQLA mod:
 
    ```yaml
    mods:
      - mods/flashqla
    ```
 
-5. Run the recipe:
+6. Run the recipe:
 
    ```bash
    ./run-recipe.sh qwen3.6-27b-pq --solo
