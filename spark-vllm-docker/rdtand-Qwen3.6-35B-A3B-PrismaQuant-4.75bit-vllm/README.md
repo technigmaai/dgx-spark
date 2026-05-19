@@ -16,6 +16,28 @@ The main recipe, chat-template file, and one benchmark report are present.
 ./run-recipe.sh qwen3.6-35b-a3b-pq --solo
 ```
 
+## Shared Runtime Mods
+
+This recipe uses the same Spark vLLM runtime mod setup documented in the 27B recipe notes:
+
+| Mod | Recipe entry | Setup notes |
+|---|---|---|
+| FlashQLA-Blackwell | `mods/flashqla-20260514` | [FlashQLA-Blackwell Mod](../rdtand-Qwen3.6-27B-PrismaQuant-5.5bit-vllm/README.md#flashqla-blackwell-mod) |
+| Fastokens | `mods/fastokens` | [Fastokens Wheel Mod](../rdtand-Qwen3.6-27B-PrismaQuant-5.5bit-vllm/README.md#fastokens-wheel-mod) |
+
+The recipe enables Fastokens with:
+
+```yaml
+defaults:
+  tokenizer_mode: fastokens
+```
+
+and passes it to vLLM with:
+
+```bash
+--tokenizer-mode {tokenizer_mode}
+```
+
 ## Chat Template Mod
 
 | Item | Path |
