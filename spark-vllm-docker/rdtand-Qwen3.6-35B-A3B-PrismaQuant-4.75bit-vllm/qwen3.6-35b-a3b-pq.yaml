@@ -1,0 +1,64 @@
+recipe_version: '1'
+name: Qwen3.6-35B-A3B-PrismaQuant-DFlash
+cluster_only: false
+solo_only: false
+
+description: rdtand/Qwen3.6-35B-A3B-PrismaQuant-4.75bit-vllm with z-lab/Qwen3.6-35B-A3B-DFlash
+model: rdtand/Qwen3.6-35B-A3B-PrismaQuant-4.75bit-vllm
+container: vllm-node-dflash
+mods:
+  - mods/fix-qwen3.5-autoround
+  - mods/fix-qwen3-coder-next
+  - mods/flashqla-20260514
+  - mods/fastokens
+  - mods/fix-qwen3.6-chat-template
+
+defaults:
+  port: 8000
+  host: 0.0.0.0
+  gpu_memory_utilization: 0.8
+  max_model_len: 262144
+  max_num_batched_tokens: 32768
+  max_num_seqs: 4
+  num_speculative_tokens: 15
+  tokenizer_mode: fastokens
+
+env:
+  HF_HUB_OFFLINE: '1'
+  TRANSFORMERS_OFFLINE: '1'
+  FLASHINFER_DISABLE_VERSION_CHECK: '1'
+  VLLM_HTTP_TIMEOUT_KEEP_ALIVE: '600'
+  VLLM_MARLIN_USE_ATOMIC_ADD: '1'
+  VLLM_TUNED_CONFIG_FOLDER: /workspace/moe-configs
+  TORCH_MATMUL_PRECISION: high
+  NVIDIA_FORWARD_COMPAT: '1'
+  VLLM_TEST_FORCE_FP8_MARLIN: '1'
+  VLLM_ALLOW_LONG_MAX_MODEL_LEN: 1
+
+command: |
+  vllm serve rdtand/Qwen3.6-35B-A3B-PrismaQuant-4.75bit-vllm \
+    --host {host} \
+    --port {port} \
+    --served-model-name gx10 qwen3.6-35b \
+    --language-model-only \
+    --max-model-len {max_model_len} \
+    --max-num-batched-tokens {max_num_batched_tokens} \
+    --max-num-seqs {max_num_seqs} \
+    --gpu-memory-utilization {gpu_memory_utilization} \
+    --dtype bfloat16 \
+    --kv-cache-dtype auto \
+    --tokenizer-mode {tokenizer_mode} \
+    --load-format fastsafetensors \
+    --attention-backend flash_attn \
+    --no-enable-prefix-caching \
+    --enable-chunked-prefill \
+    --trust-remote-code \
+    --quantization compressed-tensors \
+    --reasoning-parser qwen3 \
+    --enable-auto-tool-choice \
+    --tool-call-parser qwen3_coder \
+    --optimization-level 3 \
+    --performance-mode throughput \
+    --default-chat-template-kwargs '{{"preserve_thinking":true}}' \
+    --speculative-config '{{"method":"dflash","model":"z-lab/Qwen3.6-35B-A3B-DFlash","num_speculative_tokens":{num_speculative_tokens}}}' \
+    --override-generation-config '{{"temperature":0.6,"top_p":0.95,"top_k":20,"min_p":0.0,"presence_penalty":0.0,"repetition_penalty":1.0}}'
