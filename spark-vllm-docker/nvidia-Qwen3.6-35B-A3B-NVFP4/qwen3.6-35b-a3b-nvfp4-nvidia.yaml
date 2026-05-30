@@ -17,7 +17,6 @@ defaults:
 env:
   TRANSFORMERS_OFFLINE: '1'
   VLLM_MARLIN_USE_ATOMIC_ADD: '1'
-  #VLLM_TUNED_CONFIG_FOLDER: /workspace/moe-configs
   VLLM_HTTP_TIMEOUT_KEEP_ALIVE: '600'
   HF_HUB_OFFLINE: '1'
   FLASHINFER_DISABLE_VERSION_CHECK: '1'
@@ -39,7 +38,6 @@ mods:
 
 model: nvidia/Qwen3.6-35B-A3B-NVFP4
 description: nvidia/Qwen3.6-35B-A3B-NVFP4 with native MTP speculation, FP8 KV cache, FlashInfer attention, long-context Spark profile
-#name: RedHatAI/Qwen3.6-35B-A3B-NVFP4
 name: nvidia/Qwen3.6-35B-A3B-NVFP4
 container: vllm-node
 command: |
