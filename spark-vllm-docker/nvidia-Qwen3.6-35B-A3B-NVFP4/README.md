@@ -12,7 +12,7 @@ The main recipe, chat-template file, and one benchmark report are present.
 | [qwen3.6-35b-a3b-nvfp4-nvidia-v2.yaml](qwen3.6-35b-a3b-nvfp4-nvidia-v2.yaml) | `vllm-node` | `gx10 qwen3.6-35b-a3b` | `mods/fix-qwen3.6-chat-template` |
 
 ## llama-benchy
-# v1
+### v1 - num_speculative_tokens: 2
 ```bash
 | model   |             test |              t/s |       peak t/s |          ttfr (ms) |       est_ppt (ms) |      e2e_ttft (ms) |
 |:--------|-----------------:|-----------------:|---------------:|-------------------:|-------------------:|-------------------:|
@@ -32,7 +32,7 @@ The main recipe, chat-template file, and one benchmark report are present.
 | gx10    |  tg512 @ d256000 |     67.09 ± 2.57 |   87.67 ± 4.92 |                    |                    |                    |
 ```
 
-# v2
+### v2 - num_speculative_tokens: 3
 ```bash
 | model   |             test |              t/s |       peak t/s |          ttfr (ms) |       est_ppt (ms) |      e2e_ttft (ms) |
 |:--------|-----------------:|-----------------:|---------------:|-------------------:|-------------------:|-------------------:|
