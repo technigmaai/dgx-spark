@@ -11,6 +11,14 @@ The main recipe, chat-template file, and one benchmark report are present.
 | [qwen3.6-35b-a3b-nvfp4-nvidia.yaml](qwen3.6-35b-a3b-nvfp4-nvidia.yaml) | `vllm-node` | `gx10 qwen3.6-35b-a3b` | `mods/fix-qwen3.6-chat-template` |
 | [qwen3.6-35b-a3b-nvfp4-nvidia-v2.yaml](qwen3.6-35b-a3b-nvfp4-nvidia-v2.yaml) | `vllm-node` | `gx10 qwen3.6-35b-a3b` | `mods/fix-qwen3.6-chat-template` |
 
+## Build Image
+
+Build the vLLM image:
+
+```bash
+./build-and-copy.sh --clean
+```
+
 ## llama-benchy
 ### v1 - num_speculative_tokens: 2
 ```bash
