@@ -6,7 +6,7 @@ defaults:
   max_num_batched_tokens: 32768
   max_model_len: 262144
   host: 0.0.0.0
-  num_speculative_tokens: 2
+  num_speculative_tokens: 3
   gpu_memory_utilization: 0.7
   max_num_seqs: 2
   port: 8000
